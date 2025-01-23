@@ -16,6 +16,13 @@ Welcome to **WikipediaTool** — your personal command-line interface for browsi
 - **Command-Line Power**: For users who prefer the speed and simplicity of terminal-based tools over web browsing.
 - **Easy Setup**: Install with a single command and start exploring Wikipedia at your fingertips.
 
+Here are some screenshots showing the tool in action:
+
+1. **Screenshot 1** - Main menu:
+    ![Screenshot 2](https://mojox.org/uploads/wpt.menu.PNG)
+2. **Screenshot 2** - Displaying the article summary:
+   ![Screenshot 2](https://mojox.org/uploads/wp.summery.PNG)
+
 ## Requirements
 
 Ensure you have the following installed before running the tool:
