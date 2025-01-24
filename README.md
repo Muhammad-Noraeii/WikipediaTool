@@ -8,6 +8,7 @@ Welcome to **WikipediaTool** — your personal command-line interface for browsi
 - **Get Article Summary**: Fetch a concise summary of any article in a matter of seconds.
 - **View Article Links**: Get a list of related articles and external links for further exploration.
 - **View Full Article**: Access the full content of any article, no fluff, just the facts.
+- **Random Article**: Discover something new by getting a random Wikipedia article at the click of a button.
 - **Multilingual Support**: Switch between multiple languages for a global Wikipedia browsing experience.
 
 ## Why Use WikipediaTool?
