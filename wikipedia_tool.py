@@ -8,10 +8,27 @@ import os
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import logging
+import json
 
 # Initialize logging
 logging.basicConfig(level=logging.INFO)
 console = Console()
+
+# Initialize bookmarks and history
+bookmarks = []
+history = []
+
+def save_bookmarks(bookmarks):
+    with open('bookmarks.json', 'w') as f:
+        json.dump(bookmarks, f)
+
+def load_bookmarks():
+    if os.path.exists('bookmarks.json'):
+        with open('bookmarks.json', 'r') as f:
+            return json.load(f)
+    return []
+
+bookmarks = load_bookmarks()
 
 def animated_intro():
     """
@@ -202,6 +219,34 @@ def get_random_article(lang="en"):
     else:
         console.print(":x: [bold red]Unable to fetch random article.[/bold red]")
 
+def view_bookmarks():
+    """
+    Displays bookmarked articles.
+    """
+    if bookmarks:
+        rows = [[str(i), bookmark] for i, bookmark in enumerate(bookmarks, 1)]
+        display_table("Bookmarked Articles", ["#", "Title"], rows)
+    else:
+        console.print(":x: [bold red]No bookmarks found![/bold red]")
+
+def add_to_history(title):
+    """
+    Adds an article to history.
+    """
+    history.append(title)
+    if len(history) > 10:  # Keep history up to 10 articles
+        history.pop(0)
+
+def view_history():
+    """
+    Displays the history of viewed articles.
+    """
+    if history:
+        rows = [[str(i), article] for i, article in enumerate(history, 1)]
+        display_table("Article History", ["#", "Title"], rows)
+    else:
+        console.print(":x: [bold red]No history found![/bold red]")
+
 def main():
     """
     Main function to handle the Wikipedia CLI tool logic.
@@ -212,7 +257,7 @@ def main():
     while True:
         menu = Panel(
             Text(
-                "\n1. Search Articles\n2. Get Article Summary\n3. Get Article Links\n4. View Full Article\n5. Change Language\n6. Random Article\n7. Exit",
+                "\n1. Search Articles\n2. Get Article Summary\n3. Get Article Links\n4. View Full Article\n5. Change Language\n6. Random Article\n7. View Bookmarks\n8. View History\n9. Exit",
                 justify="center",
             ),
             title="Main Menu",
@@ -233,6 +278,7 @@ def main():
             title = input("\nEnter article title: ").strip()
             if title:
                 get_article_summary(lang, title)
+                add_to_history(title)
             else:
                 console.print(":x: [bold red]Article title cannot be empty![/bold red]")
 
@@ -240,6 +286,7 @@ def main():
             title = input("\nEnter article title: ").strip()
             if title:
                 get_article_links(lang, title)
+                add_to_history(title)
             else:
                 console.print(":x: [bold red]Article title cannot be empty![/bold red]")
 
@@ -247,6 +294,7 @@ def main():
             title = input("\nEnter article title: ").strip()
             if title:
                 get_full_article(lang, title)
+                add_to_history(title)
             else:
                 console.print(":x: [bold red]Article title cannot be empty![/bold red]")
 
@@ -258,9 +306,18 @@ def main():
                 console.print(":x: [bold red]Language code cannot be empty![/bold red]")
 
         elif choice == '6':
-            get_random_article(lang)  # Calling the random article function
+            article_title = get_random_article(lang)  # Calling the random article function
+            if article_title:
+                add_to_history(article_title)
 
         elif choice == '7':
+            view_bookmarks()
+
+        elif choice == '8':
+            view_history()
+
+        elif choice == '9':
+            save_bookmarks(bookmarks)
             console.print("\n[bold green]Goodbye![/bold green]")
             break
 
