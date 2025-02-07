@@ -247,6 +247,35 @@ def view_history():
     else:
         console.print(":x: [bold red]No history found![/bold red]")
 
+def get_recent_changes(lang="en"):
+    """
+    Fetches and displays the recent changes from Wikipedia.
+    """
+    console.print("\n[bold yellow]Fetching recent changes from Wikipedia...\n")
+    params = {
+        "list": "recentchanges",
+        "rclimit": "10",  # You can adjust the limit as needed
+        "rcprop": "title|timestamp|user|comment|flags",
+        "rctype": "edit|new|log",  # Types of changes to show
+    }
+    data = get_wikipedia_data(lang, "query", params)
+
+    if data and 'query' in data and 'recentchanges' in data['query']:
+        recent_changes = data['query']['recentchanges']
+        rows = []
+        for change in recent_changes:
+            title = change.get('title', 'N/A')
+            timestamp = change.get('timestamp', 'N/A')
+            user = change.get('user', 'N/A')
+            comment = change.get('comment', 'N/A')
+            type_of_change = change.get('type', 'N/A')
+
+            rows.append([title, timestamp, user, comment, type_of_change])
+
+        display_table("Recent Changes", ["Title", "Timestamp", "User", "Comment", "Type"], rows)
+    else:
+        console.print(":x: [bold red]Could not fetch recent changes.[/bold red]")
+
 def main():
     """
     Main function to handle the Wikipedia CLI tool logic.
@@ -257,7 +286,7 @@ def main():
     while True:
         menu = Panel(
             Text(
-                "\n1. Search Articles\n2. Get Article Summary\n3. Get Article Links\n4. View Full Article\n5. Change Language\n6. Random Article\n7. View Bookmarks\n8. View History\n9. Exit",
+                "\n1. Search Articles\n2. Get Article Summary\n3. Get Article Links\n4. View Full Article\n5. Change Language\n6. Random Article\n7. View Bookmarks\n8. View History\n9. Recent Changes\n10. Exit",
                 justify="center",
             ),
             title="Main Menu",
@@ -315,8 +344,11 @@ def main():
 
         elif choice == '8':
             view_history()
-
+        
         elif choice == '9':
+            get_recent_changes(lang)
+
+        elif choice == '10':
             save_bookmarks(bookmarks)
             console.print("\n[bold green]Goodbye![/bold green]")
             break
